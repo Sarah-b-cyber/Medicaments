@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Medicaments"
         tools:targetApi="31">
         <activity
+            android:name=".Authentification"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

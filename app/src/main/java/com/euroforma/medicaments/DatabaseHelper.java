@@ -131,6 +131,103 @@ public  class DatabaseHelper extends SQLiteOpenHelper {
 
         return voiesAdminList;
     }
+    public List<Medicament> searchMedicaments(String denomination, String formePharmaceutique, String titulaires, String denominationSubstance, String voiesAdmin, String DateAMM) {
+        List<Medicament> medicamentList = new ArrayList<>();
+        ArrayList<String> selectionArgs = new ArrayList<>();
+        selectionArgs.add("%" + denomination + "%");
+        selectionArgs.add("%" + formePharmaceutique + "%");
+        selectionArgs.add("%" + titulaires + "%");
+        selectionArgs.add( DateAMM );
+        selectionArgs.add("%" + denominationSubstance + "%");
+        SQLiteDatabase db = this.getReadableDatabase();
+        String finSQL = "";
+        // String Sql_nbmolecule ="" ;
 
+        if (!voiesAdmin.equals(PREMIERE_VOIE)) {
+            finSQL = "AND  Voie_dadministration LIKE ?";
+            selectionArgs.add("%" + voiesAdmin + "%");
+        }
+        String SQLSubstance = "SELECT CODE_CIS FROM CIS_COMPO_bdpm WHERE replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(upper(Denomination_substance), 'Â','A'),'Ä','A'),'À','A'),'É','E'),'Á','A'),'Ï','I'), 'Ê','E'),'È','E'),'Ô','O'),'Ü','U'), 'Ç','C' ) LIKE ?";
+//String SQLSubstance = "SELECT CODE_CIS FROM CIS_COMPO_bdpm WHERE Denomination_substance COLLATE latin1_general_cs_ai LIKE ?" ;
+
+        // La requête SQL de recherche
+        String query = "SELECT *,(select count(*) from CIS_COMPO_bdpm c where c.Code_CIS=m.Code_CIS) as nb_molecule FROM CIS_bdpm m  WHERE " +
+                "Denomination LIKE ? AND " +
+                "Forme_pharmaceutique LIKE ? AND " +
+                "Titulaire LIKE ? AND " +
+                "Date_dAMM_2  >= ? AND "+
+                "Code_CIS IN (" + SQLSubstance + ")"  +
+                finSQL;
+
+        // Les valeurs à remplacer dans la requête
+
+        Log.d("SQL",query);
+        Cursor cursor = db.rawQuery(query, selectionArgs.toArray(new String[0]));
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                // Récupérer les valeurs de la ligne actuelle
+                int codeCIS = cursor.getInt(cursor.getColumnIndex("Code_CIS"));
+                String denominationMedicament = cursor.getString(cursor.getColumnIndex("Denomination"));
+                String formePharmaceutiqueMedicament = cursor.getString(cursor.getColumnIndex("Forme_pharmaceutique"));
+                String voiesAdminMedicament = cursor.getString(cursor.getColumnIndex("Voie_dadministration"));
+                String titulairesMedicament = cursor.getString(cursor.getColumnIndex("Titulaire"));
+                String statutAdministratif = cursor.getString(cursor.getColumnIndex("Statut_administratif_AMM"));
+                //String DateAMM = cursor.getString(cursor.getColumnIndex("Date_AMM"));
+                String CountMolecule = cursor.getString(cursor.getColumnIndex("nb_molecule"));
+
+
+                // Créer un objet Medicament avec les valeurs récupérées
+                Medicament medicament = new Medicament();
+                medicament.setCodeCIS(codeCIS);
+                medicament.setDenomination(denominationMedicament);
+                medicament.setFormePharmaceutique(formePharmaceutiqueMedicament);
+                medicament.setVoiesAdmin(voiesAdminMedicament);
+                medicament.setTitulaires(titulairesMedicament);
+                medicament.setStatutAdministratif(statutAdministratif);
+                medicament.setDateAMM(DateAMM);
+                // medicament.setNb_molecule(CountMolecule.toString());
+                medicament.setNb_molecule(String.valueOf(getNombreMolecules(codeCIS)));
+                // Ajouter l'objet Medicament à la liste
+                medicamentList.add(medicament);
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return medicamentList;
+    }
+
+    public int getNombreMolecules(int codeCIS) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select count(*) from CIS_COMPO_bdpm  where Code_CIS=?", new String[]{String.valueOf(codeCIS)});
+        cursor.moveToFirst();
+        int nb = cursor.getInt(0);
+        return (nb);
+    }
+
+    public List<String> getCompositionMedicament(int codeCIS) {
+        List<String> compositionList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM CIS_compo_bdpm WHERE Code_CIS = ?", new String[]{String.valueOf(codeCIS)});
+        int i = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                i++;
+                String substance = cursor.getString(cursor.getColumnIndex("Denomination_substance"));
+                String dosage = cursor.getString(cursor.getColumnIndex("Dosage_substance"));
+                compositionList.add(i + ":" + substance + "(" + dosage + ")");
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return compositionList;
+    }
 }
 

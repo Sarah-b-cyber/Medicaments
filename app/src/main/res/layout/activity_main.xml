@@ -41,6 +41,14 @@
         android:inputType="text"
         android:layout_marginTop="8dp"/>
 
+    <EditText
+        android:id="@+id/editTextDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date a saisir"
+        android:inputType="text"
+        android:layout_marginTop="8dp"/>
+
     <!-- Spinner pour les voies d'administration -->
     <Spinner
         android:id="@+id/spinnerVoiesAdmin"
@@ -54,7 +62,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Rechercher"
+        android:onClick="afficheValeurs"
         android:layout_marginTop="16dp"/>
+
+
+    <!-- ListView to display the search results -->
+    <ListView
+        android:id="@+id/listViewResults"
+        android:layout_width="match_parent"
+        android:scrollbars="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
 
 
 </LinearLayout>
