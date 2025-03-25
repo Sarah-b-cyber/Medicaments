@@ -15,6 +15,29 @@ import java.util.List;
 
 public class MedicamentAdapter extends ArrayAdapter<Medicament> {
 
+    private OnButtonCClickListener onButtonCClickListener;
+    private OnButtonPClickListener onButtonPClickListener;
+
+    // Interface pour le bouton C
+    public interface OnButtonCClickListener {
+        void onButtonCClick(Medicament medicament);
+    }
+
+    // Interface pour le bouton P
+    public interface OnButtonPClickListener {
+        void onButtonPClick(Medicament medicament);
+    }
+
+    // Méthodes pour définir les écouteurs
+    public void setOnButtonCClickListener(OnButtonCClickListener listener) {
+        this.onButtonCClickListener = listener;
+    }
+
+    public void setOnButtonPClickListener(OnButtonPClickListener listener) {
+        this.onButtonPClickListener = listener;
+    }
+
+
         public MedicamentAdapter(Context context, List<Medicament> medicaments) {
             super(context, 0, medicaments);
         }
@@ -50,21 +73,41 @@ public class MedicamentAdapter extends ArrayAdapter<Medicament> {
             tvDateAMM.setText("DateAMM: "+ (medicament.getDateAMM()));
 
             tvNb_Molecule.setText(medicament.getNb_molecule()+ pluriels(Integer.parseInt(medicament.getNb_molecule())," molecule"));
+            tvbtnComposition.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onButtonCClickListener != null && medicament != null) {
+                        onButtonCClickListener.onButtonCClick(medicament);
+                    }
+                }
+            });
+            tvbtnPresentation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onButtonPClickListener != null && medicament != null) {
+                        onButtonPClickListener.onButtonPClick(medicament);
+                    }
+                }
+            });
 
             // Return the completed view to render on screen
 
             int backgroundColor = (position % 2 == 0) ? getContext().getResources().getColor(R.color.colorLight) : getContext().getResources().getColor(R.color.colorDark);
             convertView.setBackgroundColor(backgroundColor);
 
+            // Return the completed view to render on screen
+
             return convertView;
         }
-        static String pluriels(int nbr, String mot){
-            String un_s="";
-            if (nbr>1){
-                un_s="s";
-            }
-            return (mot+un_s);
+
+    static String pluriels(int nbr, String mot){
+        String un_s="";
+        if (nbr>1){
+            un_s="s";
         }
+        return (mot+un_s);
     }
+}
+
 
 

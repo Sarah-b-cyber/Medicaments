@@ -46,6 +46,16 @@
         android:background="@android:drawable/editbox_background"
         android:textSize="16sp"
         android:visibility="gone"/>
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Entrez votre nom utilisateur"
+        android:inputType="text"
+        android:padding="10dp"
+        android:background="@android:drawable/editbox_background"
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
     <!-- Bouton pour valider l'authentification -->
     <Button
