@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logoutUser();
+                showLogoutConfirmationDialog();
             }
         });
 
@@ -210,6 +210,27 @@ public class MainActivity extends AppCompatActivity {
 
         // Vérifiez si la chaîne d'état de l'utilisateur est "authentification=OK"
         return USER_STATUS_OK.equals(userStatus);
+    }
+
+    private void showLogoutConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Déconnexion")
+                .setMessage("Êtes-vous sûr de vouloir vous déconnecter ?")
+                .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Logique de déconnexion
+                        logoutUser();
+                    }
+                })
+                .setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Annuler la déconnexion
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
 
