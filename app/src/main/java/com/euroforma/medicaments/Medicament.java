@@ -8,6 +8,7 @@ public class Medicament {
     private String titulaires;
     private String statutAdministratif;
     private String DateAMM;
+    private String Generic;
 
 
     private String Nb_Molecule;
@@ -78,6 +79,12 @@ public class Medicament {
         this.Nb_Molecule = Nb_Molecule;
     }
 
+    public String getGeneric() {
+        return Generic;
+    }
+
+    public void setGeneric(String Generic) { this.Generic = Generic;
+    }
 
 
     public String getDateAMM() {

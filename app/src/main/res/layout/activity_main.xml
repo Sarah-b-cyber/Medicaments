@@ -49,6 +49,13 @@
         android:inputType="text"
         android:layout_marginTop="8dp"/>
 
+    <CheckBox
+        android:id="@+id/checkbox_generique"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voir uniquement les génériques" />
+
+
     <!-- Spinner pour les voies d'administration -->
     <Spinner
         android:id="@+id/spinnerVoiesAdmin"

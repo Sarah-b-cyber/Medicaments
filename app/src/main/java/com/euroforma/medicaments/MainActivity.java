@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerVoiesAdmin;
     Button btnSearch;
     Button btn_logout;
+    CheckBox checkboxGenerique;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnComposition = findViewById(R.id.btnComposition);
         Button btnPresentation = findViewById(R.id.btnPresentation);
         btn_logout = findViewById(R.id.btn_logout);
+        checkboxGenerique = findViewById(R.id.checkbox_generique);
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,12 +102,14 @@ public class MainActivity extends AppCompatActivity {
         String titulaires = getEditTextValue(R.id.editTextTitulaires);
         String denominationSubstance = getEditTextValue(R.id.editTextDenominationSubstance);
         String dateAMM = getEditTextValue(R.id.editTextDate);
+        boolean generiqueChecked = checkboxGenerique.isChecked();
+
 
         // Masquer le clavier
         cacherClavier();
 
         // Recherche dans la base de données
-        List<Medicament> searchResults = dbm.searchMedicaments(denomination, formePharmaceutique, titulaires, denominationSubstance, VoieAdmin, dateAMM);
+        List<Medicament> searchResults = dbm.searchMedicaments(denomination, formePharmaceutique, titulaires, denominationSubstance, VoieAdmin, dateAMM, generiqueChecked);
 
         // Affichage des résultats
         if (searchResults.isEmpty()) {

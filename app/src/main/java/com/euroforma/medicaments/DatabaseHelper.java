@@ -1,5 +1,6 @@
 package com.euroforma.medicaments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -131,13 +132,14 @@ public  class DatabaseHelper extends SQLiteOpenHelper {
 
         return voiesAdminList;
     }
-    public List<Medicament> searchMedicaments(String denomination, String formePharmaceutique, String titulaires, String denominationSubstance, String voiesAdmin, String DateAMM) {
+    @SuppressLint("Range")
+    public List<Medicament> searchMedicaments(String denomination, String formePharmaceutique, String titulaires, String denominationSubstance, String voiesAdmin, String DateAMM, boolean generiqueChecked) {
         List<Medicament> medicamentList = new ArrayList<>();
         ArrayList<String> selectionArgs = new ArrayList<>();
         selectionArgs.add("%" + denomination + "%");
         selectionArgs.add("%" + formePharmaceutique + "%");
         selectionArgs.add("%" + titulaires + "%");
-        selectionArgs.add( DateAMM );
+        selectionArgs.add(DateAMM );
         selectionArgs.add("%" + denominationSubstance + "%");
         SQLiteDatabase db = this.getReadableDatabase();
         String finSQL = "";
@@ -151,13 +153,19 @@ public  class DatabaseHelper extends SQLiteOpenHelper {
 //String SQLSubstance = "SELECT CODE_CIS FROM CIS_COMPO_bdpm WHERE Denomination_substance COLLATE latin1_general_cs_ai LIKE ?" ;
 
         // La requête SQL de recherche
-        String query = "SELECT *,(select count(*) from CIS_COMPO_bdpm c where c.Code_CIS=m.Code_CIS) as nb_molecule FROM CIS_bdpm m  WHERE " +
+        String query = "SELECT *,(select count(*) from CIS_COMPO_bdpm c where c.Code_CIS=m.Code_CIS) as nb_molecule ,(select count(*) from CIS_GENER_bdpm g  where g.Code_CIS=m.Code_CIS) as Generic FROM CIS_bdpm m  WHERE " +
                 "Denomination LIKE ? AND " +
                 "Forme_pharmaceutique LIKE ? AND " +
                 "Titulaire LIKE ? AND " +
                 "Date_dAMM_2  >= ? AND "+
                 "Code_CIS IN (" + SQLSubstance + ")"  +
                 finSQL;
+
+        // Si la case "Générique" est cochée
+        if (generiqueChecked) {
+            query += " AND m.Code_CIS IN (SELECT Code_CIS FROM CIS_GENER_bdpm)";
+
+        }
 
         // Les valeurs à remplacer dans la requête
 
@@ -174,7 +182,7 @@ public  class DatabaseHelper extends SQLiteOpenHelper {
                 String voiesAdminMedicament = cursor.getString(cursor.getColumnIndex("Voie_dadministration"));
                 String titulairesMedicament = cursor.getString(cursor.getColumnIndex("Titulaire"));
                 String statutAdministratif = cursor.getString(cursor.getColumnIndex("Statut_administratif_AMM"));
-                //String DateAMM = cursor.getString(cursor.getColumnIndex("Date_AMM"));
+                DateAMM= cursor.getString(cursor.getColumnIndex("Date_AMM"));
                 String CountMolecule = cursor.getString(cursor.getColumnIndex("nb_molecule"));
 
 
@@ -189,6 +197,9 @@ public  class DatabaseHelper extends SQLiteOpenHelper {
                 medicament.setDateAMM(DateAMM);
                 // medicament.setNb_molecule(CountMolecule.toString());
                 medicament.setNb_molecule(String.valueOf(getNombreMolecules(codeCIS)));
+               if (cursor.getInt(cursor.getColumnIndex("Generic"))>0) {
+                   medicament.setGeneric("GENERIQUE");
+               }
                 // Ajouter l'objet Medicament à la liste
                 medicamentList.add(medicament);
             } while (cursor.moveToNext());
@@ -206,6 +217,7 @@ public  class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select count(*) from CIS_COMPO_bdpm  where Code_CIS=?", new String[]{String.valueOf(codeCIS)});
         cursor.moveToFirst();
         int nb = cursor.getInt(0);
+        cursor.close();
         return (nb);
     }
 

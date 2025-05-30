@@ -61,6 +61,7 @@ public class MedicamentAdapter extends ArrayAdapter<Medicament> {
             TextView tvStatutadministratif = convertView.findViewById(R.id.tvStatutAdministratif);
             TextView tvNb_Molecule = convertView.findViewById(R.id.nb_molecule);
             TextView tvDateAMM = convertView.findViewById(R.id.DateAMM);
+            TextView tvGeneric = convertView.findViewById(R.id.generic);
             Button tvbtnComposition= convertView.findViewById(R.id.btnComposition);
             Button tvbtnPresentation = convertView.findViewById(R.id.btnPresentation);
 
@@ -71,6 +72,7 @@ public class MedicamentAdapter extends ArrayAdapter<Medicament> {
             tvTitulaires.setText("Fabricant : " + medicament.getTitulaires());
             tvStatutadministratif.setText(medicament.getStatutAdministratif());
             tvDateAMM.setText("DateAMM: "+ (medicament.getDateAMM()));
+            tvGeneric.setText(medicament.getGeneric());
 
             tvNb_Molecule.setText(medicament.getNb_molecule()+ pluriels(Integer.parseInt(medicament.getNb_molecule())," molecule"));
             tvbtnComposition.setOnClickListener(new View.OnClickListener() {
