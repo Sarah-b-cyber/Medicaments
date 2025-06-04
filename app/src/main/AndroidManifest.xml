@@ -19,6 +19,9 @@
             android:name=".Authentification"
             android:exported="true" />
         <activity
+            android:name=".UserInformation"
+            android:exported="true"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

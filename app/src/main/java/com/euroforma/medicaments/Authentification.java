@@ -21,6 +21,7 @@ public class Authentification extends AppCompatActivity {
     // Déclaration des constantes pour les clés SharedPreferences
     private static final String PREF_NAME = "UserPrefs";
     private static final String KEY_USER_NAME = "username";
+    private static final String KEY_CODE_VISITEUR = "codeVisteur";
     private static final String KEY_USER_STATUS = "userStatus";
     private static final String USER_STATUS_OK = "Authentifié";
 
@@ -121,6 +122,13 @@ public class Authentification extends AppCompatActivity {
         // editor.putString("NOM",)
         editor.apply();
     }
+    private void setCodeVisteur(String codeVisteur) {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_CODE_VISITEUR, codeVisteur);
+        // editor.putString("NOM",)
+        editor.apply();
+    }
     private void affiche(String msg) {
 
         Toast toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
@@ -210,6 +218,8 @@ public class Authentification extends AppCompatActivity {
             String status1 = USER_STATUS_OK;
             setUserName(editTextUsername.getText().toString());
             setUserStatus(status1);
+            String codeVisiteur = editTextCodeVisiteur.getText().toString().trim();
+            setCodeVisteur(codeVisiteur);
             // Log.d("COMPARE", "OK");
 
             Toast toast = Toast.makeText(this, "Authentification réussie", Toast.LENGTH_LONG);

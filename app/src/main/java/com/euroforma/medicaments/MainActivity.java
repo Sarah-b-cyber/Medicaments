@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listviewResult;
     Spinner spinnerVoiesAdmin;
     Button btnSearch;
-    Button btn_logout;
+    ImageButton btn_logout;
     CheckBox checkboxGenerique;
 
     @Override
@@ -50,15 +51,17 @@ public class MainActivity extends AppCompatActivity {
         btnSearch = findViewById(R.id.btnSearch);
         spinnerVoiesAdmin = findViewById(R.id.spinnerVoiesAdmin);
         listviewResult = findViewById(R.id.listViewResults);
-        Button btnComposition = findViewById(R.id.btnComposition);
-        Button btnPresentation = findViewById(R.id.btnPresentation);
+       // Button btnComposition = findViewById(R.id.btnComposition);
+        //Button btnPresentation = findViewById(R.id.btnPresentation);
         btn_logout = findViewById(R.id.btn_logout);
         checkboxGenerique = findViewById(R.id.checkbox_generique);
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLogoutConfirmationDialog();
+                Intent authIntent = new Intent(MainActivity.this, UserInformation.class);
+                startActivity(authIntent);
+                finish();
             }
         });
 

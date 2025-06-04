@@ -80,13 +80,16 @@
         android:scrollbars="vertical"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-    <Button
+
+    <ImageButton
         android:id="@+id/btn_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Déconnexion"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@android:color/holo_blue_light"
+        android:contentDescription="Déconnexion"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_menu_myplaces"/> <!-- Icône de profil -->
+
 
 
 
